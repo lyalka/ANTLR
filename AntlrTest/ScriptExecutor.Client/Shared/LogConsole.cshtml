@@ -1,0 +1,65 @@
+﻿@using System.Threading
+@inherits Microsoft.AspNetCore.Blazor.Layouts.BlazorLayoutComponent
+
+<style>
+    
+    .log {
+        overflow-y: scroll;
+        height: 500px;
+        background-color: black;
+        color: white;
+        margin: 0px;
+        padding: 0px;
+    }
+    .log p {
+        padding: 2px 5px;
+        margin: 1px 0px;
+        background-color: #222;
+        font-size: small;
+    }
+        .log p.Error {
+            color: red;
+        }
+        .log p.Warning {
+            color: gold;
+        }
+        .log p.Debug {
+            color: lightcyan;
+        }
+        .log p.Information {
+            color: gray;
+        }
+</style>
+
+<div class="log">
+    @DynamicFragment
+</div>
+
+
+
+@functions
+{
+
+    private RenderFragment DynamicFragment { get; set; }
+
+    private List<(string,string)> LogBuffer { get; set; } = new List<(string, string)>();
+
+    
+    public void Log (string str, string cls)
+    {
+        LogBuffer.Add((str, cls));
+
+        DynamicFragment = builder =>
+        {
+            foreach (var (msg, index) in LogBuffer.Select((msg, index) => (msg, index)))
+            {
+                var br = msg.Item1.Replace("\n", "<br />");
+                var b = $"<p class='{msg.Item2}'> {br} </p>";
+                builder.AddMarkupContent(index, b);
+            }
+
+        };
+        StateHasChanged();
+    }
+
+}

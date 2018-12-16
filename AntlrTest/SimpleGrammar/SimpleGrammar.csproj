@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="SimpleGrammar.g4">
+      <DefaultCustomToolNamespace>$([MSBuild]::ValueOrDefault('$(RootNamespace).%(DefaultCustomToolNamespace)', '').TrimEnd('.'))</DefaultCustomToolNamespace>
+      <CustomToolNamespace>$([MSBuild]::ValueOrDefault(%(CustomToolNamespace), %(DefaultCustomToolNamespace)))</CustomToolNamespace>
+      <ForceAtn>true</ForceAtn>
+    </None>
+    <None Update="data.calc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;3021</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.CodeGenerator" Version="4.6.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Antlr4.Runtime" Version="4.6.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0"></PackageReference>
+  </ItemGroup>
+
+</Project>

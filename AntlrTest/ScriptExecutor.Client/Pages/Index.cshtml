@@ -1,0 +1,39 @@
+﻿@using Antlr4.Runtime
+@using AntlrTest
+@using SimpleGrammar
+@using Microsoft.Extensions.Logging
+@using ScriptExecutor.Client.Infrastructure
+@using ScriptExecutor.Client.Shared
+@page "/"
+
+
+<div class="row">
+    <div class="col-md-6">
+        <button class="btn btn-success" onclick="@ExecuteCode">Execute</button>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <textarea rows="20" bind="Code" style="width: 100%"></textarea>
+    </div>
+    <div class="col-md-6">
+        <LogConsole ref="_console"></LogConsole>
+    </div>
+</div>
+
+@functions
+{
+
+    LogConsole _console;
+
+    public string Code { get; set; } = "log(42); return 1; return 2;";
+
+    public string Res { get; set; } = "";
+
+    void ExecuteCode()
+    {
+        var scriptHost = new ScriptHost(Code, new DelagatingLogger<ScriptHost>(_console.Log));
+        scriptHost.ExecuteCode();
+    }
+}
